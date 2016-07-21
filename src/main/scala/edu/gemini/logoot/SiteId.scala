@@ -11,6 +11,9 @@ object SiteId {
   implicit val Zero: SiteId =
     SiteId(new UUID(0l, 0l))
 
+  implicit val Max: SiteId =
+    SiteId(new UUID(Long.MaxValue, Long.MaxValue))
+
   implicit val OrderSideId: Order[SiteId] =
     Order.orderBy { sid =>
       (sid.uuid.getMostSignificantBits, sid.uuid.getLeastSignificantBits)

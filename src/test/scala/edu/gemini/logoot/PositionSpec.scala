@@ -27,24 +27,16 @@ object PositionSpec extends Specification with ScalaCheck with Arbitraries {
         }
       }
 
-    /*
-    "sort Beginning ahead of everything else" !
-      forAll { (p: Position) =>
-        Order[Position].order(Position.Beginning, p) match {
-          case EQ => p == Position.Beginning
-          case LT => true
-          case GT => false
-        }
-      }
+    val initialState = LogootState(Rng(0), Clock.Zero)
 
-    "sort End after everything else" !
-      forAll { (p: Position) =>
-        Order[Position].order(p, Position.End) match {
-          case EQ => p == Position.End
-          case LT => true
-          case GT => false
-        }
+    "advance clock when getting the next position id" !
+      forAll { (digits: List[Digit], sid: SiteId) =>
+        val (state, posList) = digits.map(Position.next).sequenceU.runConfig(initialState, sid)
+
+        (state.clock.now === Timestamp(digits.length)) &&
+          posList.forall(_.s === sid) &&
+          posList.map(_.t.time) == posList.zipWithIndex.unzip._2.map(_ + 1) &&
+          posList.map(_.d) == digits
       }
-      */
   }
 }

@@ -8,6 +8,9 @@ import scalaz._
 sealed trait Digit {
   def toInt: Int
 
+  def next: Digit =
+    Digit.apply(toInt + 1)
+
   override def toString: String =
     s"D$toInt"
 
@@ -36,6 +39,9 @@ object Digit {
 
   val Zero: Digit =
     Digit(0)
+
+  val Max: Digit =
+    Digit(Base - 1)
 
   /** Converts the integer to a `Digit` in the range (0, Base]. Alias for
     * `apply`.

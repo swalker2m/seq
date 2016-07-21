@@ -4,14 +4,34 @@ import scalaz.Ordering.{EQ, LT, GT}
 import scalaz.Scalaz._
 import scalaz._
 
-sealed trait ElementId
+sealed trait ElementId {
+  def positions: NonEmptyList[Position]
+
+  def number: Number =
+    Number(positions.map(_.d).toList)
+}
 
 object ElementId {
-  case object Beginning                                      extends ElementId
-  final case class Middle(positions: NonEmptyList[Position]) extends ElementId
-  case object End                                            extends ElementId
+  case object Beginning                                      extends ElementId {
+    val positions: NonEmptyList[Position] =
+      NonEmptyList(Position.Zero)
+  }
 
-//  def gen(p: ElementId, )
+  final case class Middle(positions: NonEmptyList[Position]) extends ElementId
+
+  case object End                                            extends ElementId {
+    val positions: NonEmptyList[Position] =
+      NonEmptyList(Position.Max)
+  }
+
+  def genIds(p: ElementId, q: ElementId, n: Int, boundary: Int, site: SiteId): List[ElementId] = {
+    ???
+  }
+
+  def next(n: Number): LogootResult[ElementId] =
+    for {
+      p <- Position.next(n.toDigits.head)
+    } yield Middle(NonEmptyList(p))
 
   implicit val OrderMiddle: Order[Middle] = Order.order { (m0, m1) =>
     // Add Zero positions to the end of the shorter position list. These
