@@ -12,11 +12,11 @@ sealed trait Digit {
     Digit.apply(toInt + 1)
 
   override def toString: String =
-    s"D$toInt"
+    toInt.toString
 
   override def equals(a: Any): Boolean =
     a match {
-      case d: Digit => d.toInt == toInt
+      case d: Digit => d.toInt === toInt
       case _        => false
     }
 
@@ -29,7 +29,7 @@ object Digit {
     * The larger the base, the shorter the `Position` ids.
     */
   val Base: Int =
-    100
+    10
 
   /** Converts the integer to a `Digit` in the range (0, Base]. */
   def apply(i: Int): Digit =
@@ -39,6 +39,9 @@ object Digit {
 
   val Zero: Digit =
     Digit(0)
+
+  val One: Digit =
+    Digit(1)
 
   val Max: Digit =
     Digit(Base - 1)

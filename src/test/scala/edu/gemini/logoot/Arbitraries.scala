@@ -40,19 +40,23 @@ trait Arbitraries {
       } yield Position(d, s, t)
     }
 
-  import ElementId.{Beginning, Middle, End}
+  import LineId.{Beginning, Middle, End}
 
   implicit val arbMiddle: Arbitrary[Middle] =
     Arbitrary {
       for {
-        h <- arbitrary[Position]
-        t <- arbitrary[List[Position]]
-      } yield Middle(NonEmptyList[Position](h, t: _*))
+        d <- Gen.chooseNum(1, Digit.Base - 1)
+        s <- arbitrary[SiteId]
+        t <- arbitrary[Timestamp]
+
+        head  = Position(Digit(d), s, t)
+        tail <- arbitrary[List[Position]]
+      } yield Middle(NonEmptyList[Position](head, tail: _*))
     }
 
-  implicit val arbElementId: Arbitrary[ElementId] =
+  implicit val arbElementId: Arbitrary[LineId] =
     Arbitrary {
-      Gen.frequency[ElementId](
+      Gen.frequency[LineId](
          1 -> Beginning,
         98 -> arbitrary[Middle],
          1 -> End)

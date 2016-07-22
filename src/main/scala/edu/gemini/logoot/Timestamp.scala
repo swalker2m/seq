@@ -1,7 +1,6 @@
 package edu.gemini.logoot
 
-import scalaz.Scalaz._
-import scalaz._
+import scalaz._, Scalaz._
 
 sealed trait Timestamp {
   def time: Int
@@ -17,6 +16,15 @@ object Timestamp {
       // A little more than 1 billion ticks before wrapping around.
       override def next: Timestamp =
         apply(time + 1)
+
+      override def equals(a: Any): Boolean =
+        a match {
+          case that: Timestamp => time === that.time
+          case _               => false
+        }
+
+      override def hashCode: Int =
+        time
     }
 
   val Zero: Timestamp =

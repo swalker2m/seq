@@ -15,15 +15,18 @@ object Logoot {
             case Site    => LogootState.site.st
             case TimeNow => LogootState.clock.map(_.now)
             case Tick    => LogootState.clock.mods_(_.tick)
-            case Rand(m) =>
+            case Rand(n) =>
               for {
                 r1     <- LogootState.rng.st
-                (r2, i) = r1.nextInt(m)
+                (r2, i) = r1.nextNumber(n)
                 _      <- LogootState.rng.assign(r2)
               } yield i
           }
       }
   }
+
+  def point[A](a: A): Logoot[A] =
+    Free.point[LogootOp, A](a)
 
   def eval[A](prog: Logoot[A], siteId: SiteId, seed: Long): A =
     eval(prog, LogootState(siteId, seed))
