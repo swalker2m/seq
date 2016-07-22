@@ -27,14 +27,14 @@ object PositionSpec extends Specification with ScalaCheck with Arbitraries {
         }
       }
 
-    val initialState = LogootState(Rng(0), Clock.Zero)
+    val initialState = LogootState(SiteId.Min, 0)
 
     "advance clock when getting the next position id" !
-      forAll { (digits: List[Digit], sid: SiteId) =>
-        val (state, posList) = digits.map(Position.next).sequenceU.runConfig(initialState, sid)
+      forAll { (digits: List[Digit]) =>
+        val (state, posList) = Logoot.run(digits.map(Position.next).sequenceU, initialState)
 
         (state.clock.now === Timestamp(digits.length)) &&
-          posList.forall(_.s === sid) &&
+          posList.forall(_.s === SiteId.Min) &&
           posList.map(_.t.time) == posList.zipWithIndex.unzip._2.map(_ + 1) &&
           posList.map(_.d) == digits
       }

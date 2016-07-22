@@ -14,7 +14,7 @@ sealed trait ElementId {
 object ElementId {
   case object Beginning                                      extends ElementId {
     val positions: NonEmptyList[Position] =
-      NonEmptyList(Position.Zero)
+      NonEmptyList(Position.Min)
   }
 
   final case class Middle(positions: NonEmptyList[Position]) extends ElementId
@@ -28,7 +28,7 @@ object ElementId {
     ???
   }
 
-  def next(n: Number): LogootResult[ElementId] =
+  def next(n: Number): Logoot[ElementId] =
     for {
       p <- Position.next(n.toDigits.head)
     } yield Middle(NonEmptyList(p))
@@ -37,7 +37,7 @@ object ElementId {
     // Add Zero positions to the end of the shorter position list. These
     // always sort before any other position.  If the two position lists share
     // the same prefix, the shorter one sorts before.
-    val z = m0.positions.toList.zipAll(m1.positions.toList, Position.Zero, Position.Zero)
+    val z = m0.positions.toList.zipAll(m1.positions.toList, Position.Min, Position.Min)
     z.dropWhile { case (a, b) => a == b } match {
       case Nil         => EQ
       case (a, b) :: _ => Order[Position].order(a, b)

@@ -5,14 +5,15 @@ import scalaz._, Scalaz._
 final case class Position(d: Digit, s: SiteId, t: Timestamp)
 
 object Position {
-  val Zero = Position(Digit.Zero, SiteId.Zero, Timestamp.Zero)
-  val Max  = Position(Digit.Max,  SiteId.Max,  Timestamp.Max)
+  val Min = Position(Digit.Zero, SiteId.Min, Timestamp.Zero)
+  val Max = Position(Digit.Max,  SiteId.Max, Timestamp.Max)
 
-  def next(d: Digit): LogootResult[Position] = {
-    import LogootResult._
+  def next(d: Digit): Logoot[Position] = {
+    import LogootOp._
     for {
-      sid <- siteId
-      t   <- tick
+      sid <- site
+      _   <- tick
+      t   <- timeNow
     } yield Position(d, sid, t)
   }
 

@@ -1,11 +1,16 @@
 package edu.gemini.logoot
 
 import scalaz._
-import Scalaz._
 
-final case class LogootState(rng: Rng, clock: Clock)
+final case class LogootState(site: SiteId, rng: Rng, clock: Clock)
 
 object LogootState {
+  def apply(site: SiteId, seed: Long): LogootState =
+    LogootState(site, Rng(seed), Clock.Zero)
+
+  val site: LogootState @> SiteId =
+    Lens.lensu((a, b) => a.copy(site = b), _.site)
+
   val rng: LogootState @> Rng =
     Lens.lensu((a, b) => a.copy(rng = b), _.rng)
 

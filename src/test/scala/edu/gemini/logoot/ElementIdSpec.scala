@@ -13,7 +13,7 @@ object ElementIdSpec extends Specification with ScalaCheck with Arbitraries {
   "ElementId" should {
     "have Middle ordered" !
       forAll { (m0: Middle, m1: Middle) =>
-        val z = m0.positions.toList.zipAll(m1.positions.toList, Position.Zero, Position.Zero).dropWhile {
+        val z = m0.positions.toList.zipAll(m1.positions.toList, Position.Min, Position.Min).dropWhile {
           case (a, b) => a == b
         }
 

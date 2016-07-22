@@ -11,7 +11,7 @@ object Clock {
 
   def apply(ts: Timestamp): Clock =
     new Clock {
-      def now: Timestamp =
+      val now: Timestamp =
         ts
 
       def tick: Clock =

@@ -8,10 +8,10 @@ import scalaz._
 final case class SiteId(uuid: UUID) extends AnyVal
 
 object SiteId {
-  implicit val Zero: SiteId =
-    SiteId(new UUID(0l, 0l))
+  val Min: SiteId =
+    SiteId(new UUID(Long.MinValue, Long.MinValue))
 
-  implicit val Max: SiteId =
+  val Max: SiteId =
     SiteId(new UUID(Long.MaxValue, Long.MaxValue))
 
   implicit val OrderSideId: Order[SiteId] =

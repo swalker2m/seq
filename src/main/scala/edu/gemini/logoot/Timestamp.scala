@@ -11,18 +11,18 @@ sealed trait Timestamp {
 object Timestamp {
   def apply(t: Int): Timestamp =
     new Timestamp {
-      override def time: Int =
-        t
+      override val time: Int =
+        if (t < 0) 0 else t
 
       // A little more than 1 billion ticks before wrapping around.
       override def next: Timestamp =
-        (t === Int.MaxValue) ? Zero | apply(t + 1)
+        apply(time + 1)
     }
 
-  implicit val Zero: Timestamp =
+  val Zero: Timestamp =
     Timestamp(0)
 
-  implicit val Max: Timestamp =
+  val Max: Timestamp =
     Timestamp(Int.MaxValue)
 
   implicit val OrderTimestamp: Order[Timestamp] =
